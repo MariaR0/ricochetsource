@@ -69,8 +69,13 @@ BEGIN_PREDICTION_DATA( C_HL2MP_Player )
 	DEFINE_PRED_ARRAY( m_iAmmo, FIELD_INTEGER, MAX_AMMO_TYPES, FTYPEDESC_INSENDTABLE | FTYPEDESC_OVERRIDE | FTYPEDESC_NOERRORCHECK ),
 END_PREDICTION_DATA()
 
-ConVar hl2_walkspeed( "hl2_walkspeed", "150", FCVAR_REPLICATED );
+#ifdef RICOCHET_DLL
+ConVar hl2_walkspeed( "hl2_walkspeed", "190", FCVAR_REPLICATED );
+ConVar hl2_normspeed( "hl2_normspeed", "320", FCVAR_REPLICATED );
+#else
+ConVar hl2_walkspeed("hl2_walkspeed", "150", FCVAR_REPLICATED);
 ConVar hl2_normspeed( "hl2_normspeed", "190", FCVAR_REPLICATED );
+#endif
 ConVar hl2_sprintspeed( "hl2_sprintspeed", "320", FCVAR_REPLICATED );
 
 #define	HL2_WALK_SPEED hl2_walkspeed.GetFloat()
@@ -871,6 +876,7 @@ void C_HL2MP_Player::HandleSpeedChanges( CMoveData *mv )
 
 void C_HL2MP_Player::ReduceTimers( CMoveData* mv )
 {
+#ifndef RICOCHET_DLL
 	bool bSprinting = mv->m_flClientMaxSpeed == HL2_SPRINT_SPEED;
 
 	if ( bSprinting )
@@ -883,6 +889,7 @@ void C_HL2MP_Player::ReduceTimers( CMoveData* mv )
 	}
 
 	SuitPower_Update();
+#endif
 }
 
 //-----------------------------------------------------------------------------

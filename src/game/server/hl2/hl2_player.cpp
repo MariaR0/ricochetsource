@@ -83,8 +83,13 @@ extern int gEvilImpulse101;
 
 ConVar sv_autojump( "sv_autojump", "0" );
 
+#ifdef RICOCHET_DLL
+ConVar hl2_walkspeed( "hl2_walkspeed", "190", FCVAR_REPLICATED );
+ConVar hl2_normspeed( "hl2_normspeed", "320", FCVAR_REPLICATED );
+#else
 ConVar hl2_walkspeed( "hl2_walkspeed", "150", FCVAR_REPLICATED );
 ConVar hl2_normspeed( "hl2_normspeed", "190", FCVAR_REPLICATED );
+#endif
 ConVar hl2_sprintspeed( "hl2_sprintspeed", "320", FCVAR_REPLICATED );
 
 #define	HL2_WALK_SPEED hl2_walkspeed.GetFloat()
@@ -576,6 +581,7 @@ void CHL2_Player::HandleSpeedChanges( CMoveData *mv )
 
 void CHL2_Player::ReduceTimers( CMoveData *mv )
 {
+#ifndef RICOCHET_DLL
 	bool bSprinting = mv->m_flClientMaxSpeed == HL2_SPRINT_SPEED;
 
 	if ( bSprinting )
@@ -588,6 +594,7 @@ void CHL2_Player::ReduceTimers( CMoveData *mv )
 	}
 
 	SuitPower_Update();
+#endif
 }
 
 //-----------------------------------------------------------------------------
