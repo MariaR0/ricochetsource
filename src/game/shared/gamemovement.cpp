@@ -2351,6 +2351,11 @@ void CGameMovement::PlaySwimSound()
 //-----------------------------------------------------------------------------
 bool CGameMovement::CheckJumpButton( void )
 {
+#ifdef RICOCHET_DLL
+	// in this mod, disable the jump functionality.
+	return false;
+#endif
+
 	if (player->pl.deadflag)
 	{
 		mv->m_nOldButtons |= IN_JUMP ;	// don't jump again until released

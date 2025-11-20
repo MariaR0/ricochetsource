@@ -503,3 +503,10 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 game/*.exe
+game/ricochetsource/cfg/server_blacklist.txt
+game/ricochetsource/cfg/settings.scr
+game/ricochetsource/maps/graphs/*.ain
+game/ricochetsource/ServerConfig.vdf
+game/ricochetsource/stats.txt
+game/ricochetsource/voice_ban.dt
+game/ricochetsource/downloadlists/*

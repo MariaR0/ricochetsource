@@ -780,7 +780,12 @@ Vector C_HL2MP_Player::GetAutoaimVector( float flDelta )
 //-----------------------------------------------------------------------------
 bool C_HL2MP_Player::CanSprint( void )
 {
+#ifdef RICOCHET_DLL
+	// disable sprinting
+	return false;
+#else
 	return ( (!m_Local.m_bDucked && !m_Local.m_bDucking) && (GetWaterLevel() != 3) );
+#endif
 }
 
 extern ConVar sv_maxspeed;
