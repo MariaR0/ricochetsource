@@ -541,6 +541,9 @@ void CHL2_Player::HandleSpeedChanges( CMoveData *mv )
 
 	bool bWantWalking;
 
+#ifdef RICOCHET_DLL
+	bWantWalking = (mv->m_nButtons & IN_WALK) && !bSprinting && !(mv->m_nButtons & IN_DUCK);
+#else
 	if ( IsSuitEquipped() )
 	{
 		bWantWalking = ( mv->m_nButtons & IN_WALK ) && !bSprinting && !( mv->m_nButtons & IN_DUCK );
@@ -549,6 +552,7 @@ void CHL2_Player::HandleSpeedChanges( CMoveData *mv )
 	{
 		bWantWalking = true;
 	}
+#endif
 
 	if ( bWantWalking )
 	{

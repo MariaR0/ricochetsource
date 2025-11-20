@@ -674,6 +674,7 @@ ConVarRef suitcharger( "sk_suitcharger" );
 	//=========================================================
 	void CMultiplayRules::PlayerSpawn( CBasePlayer *pPlayer )
 	{
+#ifndef RICOCHET_DLL
 		bool		addDefault;
 		CBaseEntity	*pWeaponEntity = NULL;
 
@@ -686,6 +687,7 @@ ConVarRef suitcharger( "sk_suitcharger" );
 			pWeaponEntity->Touch( pPlayer );
 			addDefault = false;
 		}
+#endif
 	}
 
 	//=========================================================

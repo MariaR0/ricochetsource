@@ -510,3 +510,4 @@ game/ricochetsource/ServerConfig.vdf
 game/ricochetsource/stats.txt
 game/ricochetsource/voice_ban.dt
 game/ricochetsource/downloadlists/*
+game/ricochetsource/materials/vgui/logos/ui/*

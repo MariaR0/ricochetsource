@@ -203,6 +203,7 @@ void CHL2MP_Player::Precache( void )
 
 void CHL2MP_Player::GiveAllItems( void )
 {
+#ifndef RICOCHET_DLL
 	EquipSuit();
 
 	CBasePlayer::GiveAmmo( 255,	"Pistol");
@@ -236,11 +237,14 @@ void CHL2MP_Player::GiveAllItems( void )
 	GiveNamedItem( "weapon_slam" );
 
 	GiveNamedItem( "weapon_physcannon" );
-	
+#endif
 }
 
 void CHL2MP_Player::GiveDefaultItems( void )
 {
+#ifdef RICOCHET_DLL
+
+#else
 	EquipSuit();
 
 	CBasePlayer::GiveAmmo( 255,	"Pistol");
@@ -275,6 +279,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	{
 		Weapon_Switch( Weapon_OwnsThisType( "weapon_physcannon" ) );
 	}
+#endif
 }
 
 void CHL2MP_Player::PickDefaultSpawnTeam( void )
@@ -345,7 +350,6 @@ void CHL2MP_Player::Spawn(void)
 		RemoveSolidFlags( FSOLID_NOT_SOLID );
 
 		RemoveEffects( EF_NODRAW );
-		
 		GiveDefaultItems();
 	}
 
