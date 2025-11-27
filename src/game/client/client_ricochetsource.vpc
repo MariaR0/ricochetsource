@@ -118,6 +118,16 @@ $Project "Client (Ricochet)"
 			$File	"hl2\shieldproxy.cpp"
 			$File	"hl2\vgui_rootpanel_hl2.cpp"
 		}
+		
+		$Folder	"ricochetsource"
+		{
+			$Folder	"Weapons"
+			{
+				$File	"$SRCDIR\game\shared\ricochetsource\weapon_disc.cpp"
+			}
+			
+			$File	"$SRCDIR\game\shared\ricochetsource\discwar.h"
+		}
 
 		$Folder	"HL2MP"
 		{

@@ -307,6 +307,16 @@ $Project "Server (Ricochet)"
 				$File	"hl2\weapon_flaregun.h"
 			}
 		}
+		
+		$Folder	"ricochetsource"
+		{
+			$Folder	"Weapons"
+			{
+				$File	"$SRCDIR\game\shared\ricochetsource\weapon_disc.cpp"
+			}
+			
+			$File	"$SRCDIR\game\shared\ricochetsource\discwar.h"
+		}
 
 		$Folder	"HL2MP"
 		{
