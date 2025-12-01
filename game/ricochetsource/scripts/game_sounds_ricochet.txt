@@ -1,0 +1,62 @@
+"Disc.cbar_hitbod"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_90dB"
+
+	"rndwave"
+	{
+		"wave"		"weapons/cbar_hitbod1.wav"
+		"wave"		"weapons/cbar_hitbod2.wav"
+		"wave"		"weapons/cbar_hitbod3.wav"
+	}
+}
+
+"Disc.Altfire"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"weapons/altfire.wav"
+}
+
+"Disc.Electro"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"weapons/electro5.wav"
+}
+
+"Disc.XBow"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"rndwave"
+	{
+		"wave"		"weapons/xbow_hit1.wav"
+		"wave"		"weapons/xbow_hit2.wav"
+	}
+}
+
+"Disc.Rocket"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"weapons/rocket1.wav"
+}
+
+"Disc.Hit"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"dischit.wav"
+}

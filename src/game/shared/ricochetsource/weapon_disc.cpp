@@ -186,7 +186,7 @@ void CDisc::Spawn(void)
 	// Decapitator's make sound
 	if (m_bDecapitate)
 	{
-		EMIT_SOUND(ENT(pev), CHAN_VOICE, "weapons/rocket1.wav", 0.5, 0.5);
+		EmitSound("Disc.Rocket");
 	}
 
 	m_nRenderFX = kRenderFxGlowShell;
@@ -204,19 +204,17 @@ void CDisc::Precache(void)
 	PrecacheModel("models/weapons/disc.mdl");
 	PrecacheModel("models/dweapons/isc_hard.mdl");
 
-	PRECACHE_SOUND("weapons/cbar_hitbod1.wav");
-	PRECACHE_SOUND("weapons/cbar_hitbod2.wav");
-	PRECACHE_SOUND("weapons/cbar_hitbod3.wav");
-	PRECACHE_SOUND("weapons/altfire.wav");
-	PRECACHE_SOUND("items/gunpickup2.wav");
-	PRECACHE_SOUND("weapons/electro5.wav");
-	PRECACHE_SOUND("weapons/xbow_hit1.wav");
-	PRECACHE_SOUND("weapons/xbow_hit2.wav");
-	PRECACHE_SOUND("weapons/rocket1.wav");
-	PRECACHE_SOUND("dischit.wav");
+	PrecacheSound("Disc.cbar_hitbod");
+	PrecacheSound("Disc.Altfire");
+	PrecacheSound("Disc.Electro");
+	PrecacheSound("Disc.XBow");
+	PrecacheSound("Disc.Rocket");
+	PrecacheSound("Disc.Hit");
+	PrecacheSound("BaseCombatCharacter.AmmoPickup");
 
 	m_iTrail = PrecacheModel("sprites/smoke.vmt");
 	m_iSpriteTexture = PrecacheModel("sprites/lgtning.vmt");
+	PrecacheModel("sprites/discreturn.spr");
 }
 
 /*
@@ -232,14 +230,18 @@ void CDisc::ReturnToThrower(void)
 {
 	if (m_bDecapitate)
 	{
-		STOP_SOUND(edict(), CHAN_VOICE, "weapons/rocket1.wav");
+		StopSound(entindex(), "Disc.Rocket");
 		if (!m_bRemoveSelf)
-			((CBasePlayer*)(CBaseEntity*)m_hOwner)->GiveAmmo(MAX_DISCS, "disc", MAX_DISCS);
+		{
+			((CBasePlayer*)GetOwnerEntity())->GiveAmmo(MAX_DISCS, "Pistol", MAX_DISCS);
+		}
 	}
 	else
 	{
 		if (!m_bRemoveSelf)
-			((CBasePlayer*)(CBaseEntity*)m_hOwner)->GiveAmmo(1, "disc", MAX_DISCS);
+		{
+			((CBasePlayer*)GetOwnerEntity())->GiveAmmo(1, "Pistol", MAX_DISCS);
+		}
 	}
 
 	UTIL_Remove(this);
@@ -250,12 +252,12 @@ void CDisc::DiscTouch(CBaseEntity* pOther)
 	// Push players backwards
 	if (pOther->IsPlayer())
 	{
-		if (((CBaseEntity*)m_hOwner) == pOther)
+		if (GetOwnerEntity() == pOther)
 		{
 			if (m_fDontTouchOwner < gpGlobals->curtime)
 			{
 				// Play catch sound
-				EMIT_SOUND_DYN(pOther->edict(), CHAN_WEAPON, "items/gunpickup2.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));
+				EmitSound("BaseCombatCharacter.AmmoPickup");
 
 				ReturnToThrower();
 			}
@@ -266,11 +268,12 @@ void CDisc::DiscTouch(CBaseEntity* pOther)
 		{
 			if (GetTeamNumber() != pOther->GetTeamNumber())
 			{
+				/*
 				// Do freeze seperately so you can freeze and shatter a person with a single shot
 				if (m_iPowerupFlags & POW_FREEZE && ((CBasePlayer*)pOther)->m_iFrozen == false)
 				{
 					// Freeze the player and make them glow blue
-					EMIT_SOUND_DYN(pOther->edict(), CHAN_WEAPON, "weapons/electro5.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));
+					EmitSound("Disc.Electro");
 					((CBasePlayer*)pOther)->Freeze();
 
 					// If it's not a decap, return now. If it's a decap, continue to shatter
@@ -279,45 +282,39 @@ void CDisc::DiscTouch(CBaseEntity* pOther)
 						m_fDontTouchEnemies = gpGlobals->curtime + 2.0;
 						return;
 					}
-				}
+				}*/
 
 				// Decap or push
 				if (m_bDecapitate)
 				{
+					/*
 					// Decapitate!
 					if (m_bTeleported)
+					{
 						((CBasePlayer*)pOther)->m_flLastDiscHitTeleport = gpGlobals->curtime;
+					}
 					((CBasePlayer*)pOther)->Decapitate(((CBaseEntity*)m_hOwner)->pev);
+					*/
 
 					m_fDontTouchEnemies = gpGlobals->curtime + 0.5;
 				}
 				else
 				{
 					// Play thwack sound
-					switch (random->RandomInt(0, 2))
-					{
-						case 0:
-							EMIT_SOUND_DYN(pOther->edict(), CHAN_ITEM, "weapons/cbar_hitbod1.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));
-							break;
-						case 1:
-							EMIT_SOUND_DYN(pOther->edict(), CHAN_ITEM, "weapons/cbar_hitbod2.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));
-							break;
-						case 2:
-							EMIT_SOUND_DYN(pOther->edict(), CHAN_ITEM, "weapons/cbar_hitbod3.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));
-							break;
-					}
+					EmitSound("Disc.cbar_hitbod");
 
+					/*
 					// Push the player
-					Vector vecDir = pev->velocity.Normalize();
-					pOther->pev->flags &= ~FL_ONGROUND;
+					Vector vecDir = GetAbsVelocity().Normalized();
+					pOther->RemoveFlag(FL_ONGROUND);
 					((CBasePlayer*)pOther)->m_vecHitVelocity = vecDir * DISC_PUSH_MULTIPLIER;
 
 					// Shield flash only if the player isnt frozen
 					if (((CBasePlayer*)pOther)->m_iFrozen == false)
 					{
-						pOther->pev->renderfx = kRenderFxGlowShell;
-						pOther->pev->rendercolor.x = 255;
-						pOther->pev->renderamt = 150;
+						pOther->m_nRenderFX = kRenderFxGlowShell;
+						pOther->SetRenderColorR(255);
+						pOther->SetRenderColorA(150);
 					}
 
 					((CBasePlayer*)pOther)->m_hLastPlayerToHitMe = m_hOwner;
@@ -327,6 +324,7 @@ void CDisc::DiscTouch(CBaseEntity* pOther)
 						((CBasePlayer*)pOther)->m_flLastDiscHitTeleport = gpGlobals->curtime;
 
 					m_fDontTouchEnemies = gpGlobals->curtime + 2.0;
+					*/
 				}
 			}
 		}
@@ -338,11 +336,11 @@ void CDisc::DiscTouch(CBaseEntity* pOther)
 		if (pOther->GetTeamNumber() != GetTeamNumber())
 		{
 			// Play a warp sound and sprite
-			CSprite* pSprite = CSprite::SpriteCreate("sprites/discreturn.spr", pev->origin, TRUE);
+			CSprite* pSprite = CSprite::SpriteCreate("sprites/discreturn.spr", GetAbsOrigin(), TRUE);
 			pSprite->AnimateAndDie(60);
 			pSprite->SetTransparency(kRenderTransAdd, 255, 255, 255, 255, kRenderFxNoDissipation);
 			pSprite->SetScale(1);
-			EMIT_SOUND_DYN(edict(), CHAN_ITEM, "dischit.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));
+			EmitSound("Disc.Hit");
 
 			// Return both discs to their owners
 
@@ -362,11 +360,7 @@ void CDisc::DiscTouch(CBaseEntity* pOther)
 	{
 		m_iBounces++;
 
-		switch (RANDOM_LONG(0, 1))
-		{
-		case 0:	EMIT_SOUND_DYN(edict(), CHAN_ITEM, "weapons/xbow_hit1.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));  break;
-		case 1:	EMIT_SOUND_DYN(edict(), CHAN_ITEM, "weapons/xbow_hit2.wav", 1.0, ATTN_NORM, 0, 98 + RANDOM_LONG(0, 3));  break;
-		}
+		EmitSound("Disc.XBow");
 
 		g_pEffects->Sparks(GetAbsOrigin());
 	}
@@ -396,7 +390,7 @@ void CDisc::DiscThink()
 			CBaseEntity* pOther = NULL;
 
 			// Examine all entities within a reasonable radius
-			while ((pOther = UTIL_FindEntityByClassname(pOther, "player")) != NULL)
+			while ((pOther = gEntList.FindEntityByClassname(pOther, "player")) != NULL)
 			{
 				// Skip the guy who threw this
 				if (((CBasePlayer*)GetOwnerEntity()) == pOther)
@@ -439,7 +433,7 @@ void CDisc::DiscThink()
 		// Remove myself if my owner's died
 		if (m_bRemoveSelf)
 		{
-			STOP_SOUND(edict(), CHAN_VOICE, "weapons/rocket1.wav");
+			StopSound(entindex(), "Disc.Rocket");
 			UTIL_Remove(this);
 			return;
 		}
@@ -596,7 +590,47 @@ void CWeaponDisc::Precache( void )
 //-----------------------------------------------------------------------------
 void CWeaponDisc::PrimaryAttack( void )
 {
-	BaseClass::PrimaryAttack();
+#ifdef GAME_DLL
+	CBasePlayer* pOwner = ToBasePlayer(GetOwner());
+
+	if (!pOwner)
+		return;
+
+	if (pOwner->GetAmmoCount(m_iPrimaryAmmoType))
+	{
+		bool bCanDecap = false;
+		int iPowerupFlags = 0;
+
+		CDisc::CreateDisc(pOwner->Weapon_ShootPosition(), pOwner->BodyAngles(), pOwner->edict(), this, bCanDecap, iPowerupFlags);
+
+		// Fast powerup has a number of discs per 1 normal disc
+		/*
+		if (m_pPlayer->HasPowerup(POW_FAST))
+		{
+			m_iFastShotDiscs--;
+			if (m_iFastShotDiscs)
+			{
+				// Make this disc remove itself
+				pDisc->m_bRemoveSelf = true;
+				return;
+			}
+
+			m_iFastShotDiscs = NUM_FASTSHOT_DISCS;
+		}*/
+
+		// player "shoot" animation
+		pOwner->SetAnimation(PLAYER_ATTACK1);
+		pOwner->RemoveAmmo(1, m_iPrimaryAmmoType);
+
+		// If we have powered discs, remove one
+		/*if (m_pPlayer->m_iPowerupDiscs)
+		{
+			m_pPlayer->m_iPowerupDiscs--;
+			if (!m_pPlayer->m_iPowerupDiscs)
+				m_pPlayer->RemoveAllPowerups();
+		}*/
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------

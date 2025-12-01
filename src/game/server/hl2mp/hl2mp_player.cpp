@@ -243,7 +243,8 @@ void CHL2MP_Player::GiveAllItems( void )
 void CHL2MP_Player::GiveDefaultItems( void )
 {
 #ifdef RICOCHET_DLL
-
+	CBasePlayer::GiveAmmo(255, "Pistol");
+	GiveNamedItem("weapon_disc");
 #else
 	EquipSuit();
 
